@@ -7,3 +7,10 @@ Held:
 RANK 1125, BRONZE TIER
 Rating: 23.13
 Played Games: 145
+
+As of 12/28/2017
+Held:
+RANK 923, BRONZE TIER
+Rating: 25.53
+Played Games: 69
+https://i.imgur.com/lkcGzTN.jpg
