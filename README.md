@@ -1,2 +1,2 @@
-# HaliteII_Bot
+# Halite_II_Bot
 Bot for Halite AI competition
