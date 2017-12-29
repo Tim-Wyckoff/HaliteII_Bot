@@ -2,8 +2,8 @@ import hlt
 import logging
 from collections import OrderedDict
 
-game = hlt.Game("Conqueror")
-logging.info("Starting Conqueror")
+game = hlt.Game("V4")
+logging.info("Starting V4")
 
 while True:
     game_map = game.update_map()
@@ -11,8 +11,8 @@ while True:
 
     team_ships = game_map.get_me().all_ships()
 
-    for ship in game_map.get_me().all_ships():
-        shipid = ship.id
+    for ship in team_ships:
+        ship_id = ship.id
         if ship.docking_status != ship.DockingStatus.UNDOCKED:
             continue
 
@@ -23,18 +23,28 @@ while True:
                                  isinstance(entities_by_distance[distance][0], hlt.entity.Planet) and not
                                  entities_by_distance[distance][0].is_owned()]
 
-        closest_reinforceable_planets = [entities_by_distance[distance][0] for distance in entities_by_distance if
-                                         isinstance(entities_by_distance[distance][0], hlt.entity.Planet) if
-                                         entities_by_distance[distance][0].is_owned and not
-                                    entities_by_distance[distance][0].is_full()]
+        closest_owned_planets = [entities_by_distance[distance][0] for distance in entities_by_distance if
+                                 isinstance(entities_by_distance[distance][0], hlt.entity.Planet) if
+                                 entities_by_distance[distance][0].is_owned and not
+                                 entities_by_distance[distance][0].is_full()]
 
         closest_enemy_ships = [entities_by_distance[distance][0] for distance in entities_by_distance if
                                isinstance(entities_by_distance[distance][0], hlt.entity.Ship) and
                                entities_by_distance[distance][0] not in team_ships]
 
-        if len(closest_reinforceable_planets) > 0 and closest_reinforceable_planets[0].owner \
-                and closest_reinforceable_planets[0].owner.id == game_map.my_id:
-            target_planet = closest_reinforceable_planets[0]
+        if closest_enemy_ships[0].calculate_distance_between(ship) < 15:
+            target_ship = closest_enemy_ships[0]
+            navigate_command = ship.navigate(
+                ship.closest_point_to(target_ship),
+                game_map,
+                speed=int(hlt.constants.MAX_SPEED),
+                ignore_ships=False)
+            if navigate_command:
+                command_queue.append(navigate_command)
+
+        elif len(closest_owned_planets) > 0 and closest_owned_planets[0].owner \
+                and closest_owned_planets[0].owner.id == game_map.my_id:
+            target_planet = closest_owned_planets[0]
             if ship.can_dock(target_planet):
                 command_queue.append(ship.dock(target_planet))
             else:
@@ -71,4 +81,3 @@ while True:
     game.send_command_queue(command_queue)
     # turn end
 # game end
-
