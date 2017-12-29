@@ -20,3 +20,4 @@ Held:
 RANK 480, BRONZE TIER
 Rating: 32.6
 Played Games: 281
+https://i.imgur.com/cRQIX3x.jpg
