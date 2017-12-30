@@ -32,7 +32,7 @@ while True:
                                isinstance(entities_by_distance[distance][0], hlt.entity.Ship) and
                                entities_by_distance[distance][0] not in team_ships]
 
-        if closest_enemy_ships[0].calculate_distance_between(ship) < 15:
+        if closest_enemy_ships[0].calculate_distance_between(ship) < 12:
             target_ship = closest_enemy_ships[0]
             navigate_command = ship.navigate(
                 ship.closest_point_to(target_ship),
@@ -57,7 +57,14 @@ while True:
                     command_queue.append(navigate_command)
 
         elif len(closest_empty_planets) > 0:
-            target_planet = closest_empty_planets[0]
+            if closest_empty_planets[0].radius < closest_empty_planets[1].radius 
+                and closest_empty_planets[2].radius < closest_empty_planets[1].radius:
+                target_planet = closest_empty_planets[1]
+            elif closest_empty_planets[0].radius > closest_empty_planets[1].radius 
+                and closest_empty_planets[0].radius > closest_empty_planets[2].radius:
+                target_planet = closest_empty_planets[0]
+            else:
+                target_planet = closest_empty_planets[2]
             if ship.can_dock(target_planet):
                 command_queue.append(ship.dock(target_planet))
             else:
